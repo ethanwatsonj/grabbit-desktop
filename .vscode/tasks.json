@@ -2,7 +2,7 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Build Grabbit",
+      "label": "Build grabbit-swiftui",
       "type": "shell",
       "command": "make build",
       "group": {
@@ -13,21 +13,21 @@
       "detail": "xcodebuild via Makefile (no Xcode.app)"
     },
     {
-      "label": "Run Grabbit",
+      "label": "Run grabbit-swiftui",
       "type": "shell",
       "command": "make run",
       "group": "none",
       "problemMatcher": ["$swiftc"],
-      "detail": "Build and launch Grabbit.app"
+      "detail": "Build and launch grabbit-swiftui.app"
     },
     {
       "type": "sweetpad",
       "action": "launch",
       "problemMatcher": ["$sweetpad-watch"],
       "label": "sweetpad: launch",
-      "detail": "Build and launch Grabbit",
+      "detail": "Build and launch grabbit-swiftui",
       "isBackground": true,
-      "scheme": "Grabbit",
+      "scheme": "grabbit-swiftui",
       "configuration": "Debug"
     },
     {
@@ -35,8 +35,8 @@
       "action": "build",
       "problemMatcher": ["$sweetpad-watch"],
       "label": "sweetpad: build",
-      "detail": "Build Grabbit without launching",
-      "scheme": "Grabbit",
+      "detail": "Build grabbit-swiftui without launching",
+      "scheme": "grabbit-swiftui",
       "configuration": "Debug"
     }
   ]

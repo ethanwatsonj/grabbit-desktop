@@ -1,6 +1,6 @@
 #!/bin/bash
 # Cursor "stop" hook: fires when the agent finishes responding to a prompt.
-# Builds & launches Grabbit via `make run` (no Xcode.app required) when the
+# Builds & launches grabbit-swiftui via `make run` (no Xcode.app required) when the
 # user ended their prompt with "build and run" (see check-build-run.sh).
 
 input=$(cat)
@@ -31,7 +31,7 @@ export DEVELOPER_DIR="${DEVELOPER_DIR:-/Applications/Xcode.app/Contents/Develope
 
 log_file=".cursor/.last-build-run.log"
 {
-  echo "=== Grabbit build & run $(date) ==="
+  echo "=== grabbit-swiftui build & run $(date) ==="
   echo "DEVELOPER_DIR=$DEVELOPER_DIR"
   echo "xcode-select: $(xcode-select -p 2>/dev/null || echo unknown)"
   make run

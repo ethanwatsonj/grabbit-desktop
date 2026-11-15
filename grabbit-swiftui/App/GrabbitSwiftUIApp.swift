@@ -1,6 +1,6 @@
 //
-//  GrabbitApp.swift
-//  Grabbit
+//  grabbit-swiftuiSwiftUIApp.swift
+//  grabbit-swiftui
 //
 //  Created by Ethan Watson on 6/27/26.
 //
@@ -506,7 +506,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 }
 
 @main
-struct GrabbitApp: App {
+struct GrabbitSwiftUIApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
     var body: some Scene {

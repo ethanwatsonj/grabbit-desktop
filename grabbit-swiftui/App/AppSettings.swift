@@ -133,7 +133,7 @@ enum AppSettings {
     }
 
     /// UserDefaults can fail after restart when the preferences plist is quarantined /
-    /// rejected by cfprefsd (`Could not write domain ewew.design.Grabbit`) even though
+    /// rejected by cfprefsd (`Could not write domain ewew.design.grabbit-swiftui`) even though
     /// the file on disk still has `destinationFolderPath`. Read past that and mirror
     /// into Application Support so Recents keep scoping to the real save folder.
     private static func resolvedDestinationPath() -> String? {
@@ -147,7 +147,7 @@ enum AppSettings {
             return path
         }
 
-        if let path = destinationPathFromPreferencesPlist(bundleID: Bundle.main.bundleIdentifier ?? "ewew.design.Grabbit") {
+        if let path = destinationPathFromPreferencesPlist(bundleID: Bundle.main.bundleIdentifier ?? "ewew.design.grabbit-swiftui") {
             persistDestinationPath(path)
             return path
         }

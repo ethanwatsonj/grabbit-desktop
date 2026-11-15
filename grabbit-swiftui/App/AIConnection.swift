@@ -27,7 +27,9 @@ enum OrganizeAIProvider: String, CaseIterable, Identifiable {
 enum AIConnection {
     static let didChangeNotification = Notification.Name("AIConnectionDidChange")
 
-    private static let keychainService = "ewew.design.Grabbit.ai"
+    private static let keychainService = "ewew.design.grabbit-swiftui.ai"
+    /// Pre-rename Keychain service; migrated on first read after the rename.
+    private static let legacyKeychainService = "ewew.design.Grabbit.ai"
     private static let geminiAccount = "geminiAPIKey"
     private static let organizeProviderKey = "organizeAIProvider"
 
@@ -62,10 +64,20 @@ enum AIConnection {
     }
 
     static func geminiAPIKey() throws -> String? {
-        let raw = try KeychainStore.string(service: keychainService, account: geminiAccount)
-        let trimmed = raw?.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard let trimmed, !trimmed.isEmpty else { return nil }
-        return trimmed
+        if let raw = try KeychainStore.string(service: keychainService, account: geminiAccount) {
+            let trimmed = raw.trimmingCharacters(in: .whitespacesAndNewlines)
+            if !trimmed.isEmpty { return trimmed }
+        }
+        // One-shot migrate from the pre-rename Keychain service.
+        if let legacy = try KeychainStore.string(service: legacyKeychainService, account: geminiAccount) {
+            let trimmed = legacy.trimmingCharacters(in: .whitespacesAndNewlines)
+            if !trimmed.isEmpty {
+                try KeychainStore.setString(trimmed, service: keychainService, account: geminiAccount)
+                try KeychainStore.setString(nil, service: legacyKeychainService, account: geminiAccount)
+                return trimmed
+            }
+        }
+        return nil
     }
 
     static func connectGemini(apiKey: String) throws {

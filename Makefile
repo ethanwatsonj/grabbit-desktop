@@ -1,16 +1,16 @@
-PROJECT        := Grabbit.xcodeproj
-SCHEME         := Grabbit
+PROJECT        := grabbit-swiftui.xcodeproj
+SCHEME         := grabbit-swiftui
 CONFIG         ?= Debug
 DERIVED        := .build
 DESTINATION    := platform=macOS,arch=arm64
-APP            := $(DERIVED)/Build/Products/$(CONFIG)/Grabbit.app
-BUNDLE_ID      := ewew.design.Grabbit
+APP            := $(DERIVED)/Build/Products/$(CONFIG)/grabbit-swiftui.app
+BUNDLE_ID      := ewew.design.grabbit-swiftui
 
 # Release packaging (Developer ID–signed, notarized, stapled .app)
-RELEASE_APP    ?= Grabbit.app
+RELEASE_APP    ?= grabbit-swiftui.app
 DIST           := dist
 DMG_ROOT       := $(DIST)/dmg-root
-DMG            := $(DIST)/Grabbit.dmg
+DMG            := $(DIST)/grabbit-swiftui.dmg
 NOTARY_PROFILE ?= AC_PASSWORD
 CREATE_DMG     := $(shell \
 	if command -v create-dmg >/dev/null 2>&1; then command -v create-dmg; \
@@ -43,13 +43,14 @@ ensure-xcode:
 	@xcrun --find xcodebuild >/dev/null
 	@xcodebuild -version
 
-# Stop every running Grabbit (Cursor .build + Xcode DerivedData copies).
+# Stop every running grabbit-swiftui (Cursor .build + Xcode DerivedData copies).
 # Also releases instances held by Xcode's debugserver (normal killall can't).
 stop:
 	@osascript -e 'tell application id "$(BUNDLE_ID)" to quit' >/dev/null 2>&1 || true
+	@killall grabbit-swiftui 2>/dev/null || true
 	@killall Grabbit 2>/dev/null || true
 	@sleep 0.3
-	@pids="$$(pgrep -f '/Grabbit\.app/Contents/MacOS/Grabbit' 2>/dev/null || true)"; \
+	@pids="$$(pgrep -f '/grabbit-swiftui\.app/Contents/MacOS/grabbit-swiftui' 2>/dev/null || true)"; \
 	for pid in $$pids; do \
 		ppid="$$(ps -o ppid= -p "$$pid" 2>/dev/null | tr -d ' ')"; \
 		if [ -n "$$ppid" ] && [ "$$ppid" != "1" ]; then \
@@ -60,6 +61,7 @@ stop:
 		fi; \
 		/bin/kill -9 "$$pid" 2>/dev/null || true; \
 	done
+	@killall -9 grabbit-swiftui 2>/dev/null || true
 	@killall -9 Grabbit 2>/dev/null || true
 	@sleep 0.2
 
@@ -82,26 +84,26 @@ ensure-create-dmg:
 	fi
 
 # Stage RELEASE_APP and build an installer-window DMG (does not notarize).
-# Example: make dmg RELEASE_APP=/path/to/stapled/Grabbit.app
+# Example: make dmg RELEASE_APP=/path/to/stapled/grabbit-swiftui.app
 dmg: ensure-create-dmg
 	@test -d "$(RELEASE_APP)" || { \
 		echo "error: RELEASE_APP not found: $(RELEASE_APP)"; \
 		echo "Pass a Developer ID–signed, notarized, stapled .app, e.g."; \
-		echo "  make dmg RELEASE_APP=/path/to/Grabbit.app"; \
+		echo "  make dmg RELEASE_APP=/path/to/grabbit-swiftui.app"; \
 		exit 1; \
 	}
 	@mkdir -p "$(DMG_ROOT)"
 	@rm -rf "$(DMG_ROOT)"/*
-	@cp -R "$(RELEASE_APP)" "$(DMG_ROOT)/Grabbit.app"
+	@cp -R "$(RELEASE_APP)" "$(DMG_ROOT)/grabbit-swiftui.app"
 	@rm -f "$(DMG)"
 	"$(CREATE_DMG)" \
-		--volname "Grabbit" \
+		--volname "grabbit-swiftui" \
 		--window-pos 200 120 \
 		--window-size 600 400 \
 		--icon-size 100 \
-		--icon "Grabbit.app" 150 190 \
+		--icon "grabbit-swiftui.app" 150 190 \
 		--app-drop-link 450 190 \
-		--hide-extension "Grabbit.app" \
+		--hide-extension "grabbit-swiftui.app" \
 		"$(DMG)" \
 		"$(DMG_ROOT)"
 	@echo ""
@@ -112,7 +114,7 @@ dmg: ensure-create-dmg
 	@echo "  spctl --assess --type open --context context:primary-signature -v $(DMG)"
 	@echo "Then publish: make release TAG=v0.1.0"
 
-# Publish stapled dist/Grabbit.dmg to GitHub Releases (stable asset name).
+# Publish stapled dist/grabbit-swiftui.dmg to GitHub Releases (stable asset name).
 # Requires: gh auth login, public repo, TAG=vX.Y.Z
 release:
 	@test -f "$(DMG)" || { echo "error: missing $(DMG) — run make dmg first"; exit 1; }
@@ -121,8 +123,8 @@ release:
 	if [ -z "$$GH" ] && [ -x tools/gh/gh ]; then GH=tools/gh/gh; fi; \
 	if [ -z "$$GH" ]; then echo "error: gh not found — brew install gh && gh auth login"; exit 1; fi; \
 	"$$GH" release create "$(TAG)" "$(DMG)" \
-		--title "Grabbit $$(echo '$(TAG)' | sed 's/^v//')" \
+		--title "grabbit-swiftui $$(echo '$(TAG)' | sed 's/^v//')" \
 		--notes "Notarized macOS build."
 	@echo ""
 	@echo "Download URL:"
-	@echo "  https://github.com/ethanwatsonj/Grabbbit/releases/latest/download/Grabbit.dmg"
+	@echo "  https://github.com/ethanwatsonj/grabbit-swiftui/releases/latest/download/grabbit-swiftui.dmg"

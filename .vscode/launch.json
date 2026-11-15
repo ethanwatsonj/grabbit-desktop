@@ -4,7 +4,7 @@
     {
       "type": "sweetpad-lldb",
       "request": "launch",
-      "name": "Grabbit (SweetPad)",
+      "name": "grabbit-swiftui (SweetPad)",
       "preLaunchTask": "sweetpad: launch"
     }
   ]

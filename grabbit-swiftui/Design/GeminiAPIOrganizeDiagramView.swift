@@ -68,7 +68,7 @@ struct GeminiAPIOrganizeDiagramView: View {
 
                 DiagramNode(
                     title: "2. Keychain only",
-                    detail: "AIConnection writes the trimmed key to Keychain (service ewew.design.Grabbit.ai, account geminiAPIKey). Never UserDefaults, never logs, never bundled.",
+                    detail: "AIConnection writes the trimmed key to Keychain (service ewew.design.grabbit-swiftui.ai, account geminiAPIKey). Never UserDefaults, never logs, never bundled.",
                     tone: .signal
                 )
                 DiagramArrow()
