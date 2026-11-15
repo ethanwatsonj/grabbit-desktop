@@ -2,42 +2,26 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Build grabbit-swiftui",
+      "label": "Dev grabbit-swiftui",
       "type": "shell",
-      "command": "make build",
+      "command": "npm run dev",
       "group": {
         "kind": "build",
         "isDefault": true
       },
-      "problemMatcher": ["$swiftc"],
-      "detail": "xcodebuild via Makefile (no Xcode.app)"
+      "problemMatcher": []
     },
     {
-      "label": "Run grabbit-swiftui",
+      "label": "Build helper",
       "type": "shell",
-      "command": "make run",
-      "group": "none",
-      "problemMatcher": ["$swiftc"],
-      "detail": "Build and launch grabbit-swiftui.app"
+      "command": "make helper",
+      "problemMatcher": []
     },
     {
-      "type": "sweetpad",
-      "action": "launch",
-      "problemMatcher": ["$sweetpad-watch"],
-      "label": "sweetpad: launch",
-      "detail": "Build and launch grabbit-swiftui",
-      "isBackground": true,
-      "scheme": "grabbit-swiftui",
-      "configuration": "Debug"
-    },
-    {
-      "type": "sweetpad",
-      "action": "build",
-      "problemMatcher": ["$sweetpad-watch"],
-      "label": "sweetpad: build",
-      "detail": "Build grabbit-swiftui without launching",
-      "scheme": "grabbit-swiftui",
-      "configuration": "Debug"
+      "label": "Dist DMG",
+      "type": "shell",
+      "command": "make dist",
+      "problemMatcher": []
     }
   ]
 }

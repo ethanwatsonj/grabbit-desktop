@@ -1,6 +1,5 @@
 #!/bin/bash
-# Cursor "stop" hook: fires when the agent finishes responding to a prompt.
-# Builds & launches grabbit-swiftui via `make run` (no Xcode.app required) when the
+# Cursor "stop" hook: builds & launches Electron via `npm run dev` when the
 # user ended their prompt with "build and run" (see check-build-run.sh).
 
 input=$(cat)
@@ -26,15 +25,10 @@ fi
 repo_root="$(cd "$(dirname "$0")/../.." && pwd)"
 cd "$repo_root" || exit 0
 
-# Prefer full Xcode.app even if xcode-select points at bare CLT.
-export DEVELOPER_DIR="${DEVELOPER_DIR:-/Applications/Xcode.app/Contents/Developer}"
-
 log_file=".cursor/.last-build-run.log"
 {
-  echo "=== grabbit-swiftui build & run $(date) ==="
-  echo "DEVELOPER_DIR=$DEVELOPER_DIR"
-  echo "xcode-select: $(xcode-select -p 2>/dev/null || echo unknown)"
-  make run
+  echo "=== grabbit-swiftui electron build & run $(date) ==="
+  npm run dev
 } >"$log_file" 2>&1 &
 
 exit 0

@@ -1,11 +1,5 @@
 {
-  "sweetpad.build.xcodeWorkspacePath": "grabbit-swiftui.xcodeproj/project.xcworkspace",
-  "sweetpad.build.derivedDataPath": ".build",
-  "sweetpad.build.schemes.include": ["grabbit-swiftui"],
-  "sweetpad.buildServer.provider": "sweetpad",
-  "sweetpad.build.autoGenerateBuildServerConfig": true,
-  "sweetpad.build.xcbeautifyEnabled": false,
-  "swift.sourcekit-lsp.trace.server": "off",
+  "typescript.tsdk": "node_modules/typescript/lib",
   "terminal.integrated.env.osx": {
     "DEVELOPER_DIR": "/Applications/Xcode.app/Contents/Developer"
   }

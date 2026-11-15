@@ -1,0 +1,80 @@
+{
+  "name": "grabbit-swiftui",
+  "version": "0.1.0",
+  "description": "Native-feel macOS capture tool — screenshots, recording, annotations, Capture Library, Auto Organize (Electron)",
+  "main": "./out/main/index.js",
+  "author": "Ethan Watson",
+  "license": "UNLICENSED",
+  "homepage": "https://github.com/ethanwatsonj/grabbit-swiftui",
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "preview": "electron-vite preview",
+    "dist": "npm run build && electron-builder --mac",
+    "dist:dir": "npm run build && electron-builder --mac --dir",
+    "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json",
+    "helper:build": "swift build -c release --package-path native/helper",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "dependencies": {
+    "electron-store": "^8.2.0",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "@types/uuid": "^10.0.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "electron": "^35.0.0",
+    "electron-builder": "^25.1.8",
+    "electron-vite": "^3.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "typescript": "^5.8.2",
+    "vite": "^6.2.0"
+  },
+  "build": {
+    "appId": "ewew.design.grabbit-swiftui",
+    "productName": "grabbit-swiftui",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "out/**/*",
+      "resources/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "native/helper/.build/release/grabbit-helper",
+        "to": "grabbit-helper",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "mac": {
+      "category": "public.app-category.productivity",
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist",
+      "extendInfo": {
+        "LSUIElement": true,
+        "NSMicrophoneUsageDescription": "Grabbit records your microphone when you enable the mic toggle during screen recordings.",
+        "NSScreenCaptureUsageDescription": "Grabbit needs screen access to capture screenshots and recordings. Captures stay on your Mac unless you connect AI in Settings and run Auto Organize."
+      }
+    },
+    "dmg": {
+      "artifactName": "grabbit-swiftui.${ext}"
+    }
+  },
+  "allowScripts": {
+    "electron@35.7.5": true,
+    "esbuild@0.25.12": true
+  }
+}
