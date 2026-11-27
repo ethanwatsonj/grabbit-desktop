@@ -2,6 +2,11 @@
 
 Reference: `archive/swiftui/` · branch `archive/swiftui` · tag `swiftui-archive`
 
+## Design system
+- [x] Full Palette ramps + semantics (`global.css` / `design/tokens.ts` ← `DesignTokens.swift`)
+- [x] Kitchen Sink window (Settings → Debug) ← `KitchenSinkView`
+- [x] Rabbit hop loader + Auto Organize chrome
+
 ## Shell & storage
 - [x] Menu bar / tray accessory app (`LSUIElement`)
 - [x] Onboarding: Screen Recording → Accessibility → save folder

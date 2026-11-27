@@ -10,6 +10,8 @@ import {
   moveCaptureToProject,
   updateCapture
 } from './storage/history'
+import { browseLibraryFolder } from './storage/libraryBrowser'
+import type { LibraryPrimaryView } from '../shared/types'
 import { getGeminiApiKey, setGeminiApiKey } from './storage/secrets'
 import { takeScreenshot, listWindowsForPicker } from './capture/captureService'
 import {
@@ -32,10 +34,12 @@ import {
   revealInFinder,
   showAnnotate,
   showCaptureBar,
+  showKitchenSink,
   showLibrary,
   showOnboarding,
   showRegionPicker,
   showSettings,
+  showToast,
   showWindowPicker
 } from './windows/windowManager'
 import { refreshTrayMenu } from './tray'
@@ -56,7 +60,12 @@ export function registerIpc(): void {
   })
 
   ipcMain.handle(IPC.historyList, () => listCaptures())
-  ipcMain.handle(IPC.historyGet, (_e, id: string) => getCapture(id))
+  ipcMain.handle(IPC.libraryBrowse, (_e, relativePath: string, view: LibraryPrimaryView) =>
+    browseLibraryFolder(relativePath || '', view || 'all')
+  )
+  ipcMain.handle(IPC.historyGet, (_e, id: string) => {
+    return getCapture(id) || listCaptures().find((c) => c.id === id)
+  })
   ipcMain.handle(IPC.historyUpdate, (_e, id: string, patch: Partial<CaptureRecord>) => {
     if (patch.projectTag !== undefined) {
       return moveCaptureToProject(id, patch.projectTag || undefined)
@@ -123,9 +132,27 @@ export function registerIpc(): void {
     return true
   })
 
-  ipcMain.handle(IPC.libraryShow, () => showLibrary())
-  ipcMain.handle(IPC.settingsShow, () => showSettings())
-  ipcMain.handle(IPC.onboardingShow, () => showOnboarding())
+  ipcMain.handle(IPC.libraryShow, () => {
+    showLibrary()
+  })
+  ipcMain.handle(IPC.settingsShow, () => {
+    showSettings()
+  })
+  ipcMain.handle(IPC.kitchenSinkShow, () => {
+    showKitchenSink()
+  })
+  ipcMain.handle(IPC.kitchenSinkToast, (_e, message: string, withAction?: boolean) => {
+    showToast({
+      captureId: '',
+      path: '',
+      kind: 'screenshot',
+      message,
+      actionTitle: withAction ? 'Open' : undefined
+    })
+  })
+  ipcMain.handle(IPC.onboardingShow, () => {
+    showOnboarding()
+  })
   ipcMain.handle(IPC.onboardingComplete, () => {
     setSettings({ onboardingComplete: true })
     closeWindowByKey('onboarding')

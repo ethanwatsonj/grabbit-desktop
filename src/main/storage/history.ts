@@ -1,61 +1,196 @@
 import fs from 'fs'
-import os from 'os'
 import path from 'path'
 import { v4 as uuidv4 } from 'uuid'
 import type { CaptureKind, CaptureRecord, HistoryManifest, WindowSignature } from '../../shared/types'
-import { getSettings } from './settings'
 import { formatCaptureFilename, manifestPath, thumbsDir } from './paths'
+import { resolveDestination } from './destination'
+import { listFilesInDestination } from './libraryBrowser'
 
-const MAX_ITEMS = 200
+const MAX_ITEMS = 500
 
 function emptyManifest(): HistoryManifest {
   return { version: 1, items: [] }
 }
 
+/** Apple CFAbsoluteTime (seconds since 2001-01-01) → ISO string */
+function appleTimeToIso(value: unknown): string {
+  if (typeof value === 'string' && value.includes('T')) return value
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    // Heuristic: Swift used CFAbsoluteTime (~8e8). Unix ms would be ~1e12.
+    if (value > 1e12) return new Date(value).toISOString()
+    if (value > 1e10) return new Date(value).toISOString() // unix ms-ish
+    const appleEpochMs = Date.UTC(2001, 0, 1)
+    return new Date(appleEpochMs + value * 1000).toISOString()
+  }
+  return new Date().toISOString()
+}
+
+function kindFromPath(filePath: string, fallback?: string): CaptureKind {
+  const ext = path.extname(filePath).toLowerCase()
+  if (['.m4a', '.mp3', '.wav', '.aac'].includes(ext)) return 'audio'
+  if (['.mp4', '.mov', '.webm', '.m4v'].includes(ext)) return 'recording'
+  if (fallback === 'recording' || fallback === 'screenshot' || fallback === 'audio') {
+    return fallback
+  }
+  return 'screenshot'
+}
+
+interface SwiftTag {
+  id?: string
+  name?: string
+  kind?: string
+}
+
+interface SwiftCapture {
+  id?: string
+  path?: string
+  kind?: string
+  createdAt?: number | string
+  thumbnailPath?: string
+  tags?: SwiftTag[]
+  displayName?: string
+  projectTag?: string
+  customTags?: string[]
+  windowSignature?: WindowSignature
+}
+
+function projectFromTags(tags: SwiftTag[] | undefined): string | undefined {
+  const project = tags?.find((t) => t.kind === 'project' && t.name)
+  return project?.name
+}
+
+function projectFromPath(filePath: string, destRoot: string): string | undefined {
+  const resolved = path.resolve(filePath)
+  const root = path.resolve(destRoot)
+  if (!resolved.startsWith(root + path.sep)) return undefined
+  const rel = path.relative(root, resolved)
+  const parts = rel.split(path.sep)
+  if (parts.length >= 2) return parts[0]
+  return undefined
+}
+
+function normalizeRecord(raw: SwiftCapture, destRoot: string): CaptureRecord | null {
+  if (!raw.path) return null
+  const customTags =
+    raw.customTags ??
+    (raw.tags || [])
+      .filter((t) => t.kind !== 'project' && t.name)
+      .map((t) => t.name as string)
+
+  const projectTag =
+    raw.projectTag || projectFromTags(raw.tags) || projectFromPath(raw.path, destRoot)
+
+  return {
+    id: raw.id || uuidv4(),
+    kind: kindFromPath(raw.path, raw.kind),
+    path: raw.path,
+    createdAt: appleTimeToIso(raw.createdAt),
+    thumbnailPath: raw.thumbnailPath,
+    projectTag,
+    customTags,
+    windowSignature: raw.windowSignature,
+    displayName: raw.displayName || path.parse(raw.path).name
+  }
+}
+
+function parseManifestFile(raw: string, destRoot: string): HistoryManifest {
+  try {
+    const data = JSON.parse(raw) as unknown
+    // Electron format
+    if (data && typeof data === 'object' && !Array.isArray(data) && Array.isArray((data as HistoryManifest).items)) {
+      const items = (data as HistoryManifest).items
+        .map((item) => normalizeRecord(item as SwiftCapture, destRoot))
+        .filter((x): x is CaptureRecord => Boolean(x))
+      return { version: 1, items }
+    }
+    // Swift format: bare array
+    if (Array.isArray(data)) {
+      const items = data
+        .map((item) => normalizeRecord(item as SwiftCapture, destRoot))
+        .filter((x): x is CaptureRecord => Boolean(x))
+      return { version: 1, items }
+    }
+  } catch {
+    /* fall through */
+  }
+  return emptyManifest()
+}
+
 export function loadManifest(): HistoryManifest {
+  const destRoot = resolveDestination()
   const p = manifestPath()
   if (!fs.existsSync(p)) return emptyManifest()
-  try {
-    const data = JSON.parse(fs.readFileSync(p, 'utf8')) as HistoryManifest
-    if (!data.items) return emptyManifest()
-    return data
-  } catch {
-    return emptyManifest()
-  }
+  const parsed = parseManifestFile(fs.readFileSync(p, 'utf8'), destRoot)
+  return parsed
 }
 
 function saveManifest(manifest: HistoryManifest): void {
   fs.writeFileSync(manifestPath(), JSON.stringify(manifest, null, 2), 'utf8')
 }
 
-export function listCaptures(): CaptureRecord[] {
-  const manifest = loadManifest()
-  // Drop missing files
-  const items = manifest.items.filter((item) => fs.existsSync(item.path))
-  if (items.length !== manifest.items.length) {
-    saveManifest({ version: 1, items })
+/** One-shot rewrite of Swift array manifest into Electron shape (keeps same path). */
+function persistNormalizedIfNeeded(items: CaptureRecord[]): void {
+  const p = manifestPath()
+  if (!fs.existsSync(p)) return
+  try {
+    const raw = JSON.parse(fs.readFileSync(p, 'utf8')) as unknown
+    if (Array.isArray(raw)) {
+      saveManifest({ version: 1, items })
+    }
+  } catch {
+    /* ignore */
   }
-  return items
+}
+
+export function listCaptures(): CaptureRecord[] {
+  // Library / tray source of truth: files under the Settings destination folder.
+  const fromDisk = listFilesInDestination('all')
+  if (fromDisk.length) return fromDisk.slice(0, MAX_ITEMS)
+
+  // Fallback: migrated Swift manifest paths that still exist
+  const manifest = loadManifest()
+  const existing = manifest.items.filter((item) => {
+    try {
+      return fs.existsSync(item.path)
+    } catch {
+      return false
+    }
+  })
+  if (existing.length) persistNormalizedIfNeeded(existing)
+  return existing.slice(0, MAX_ITEMS)
 }
 
 export function getCapture(id: string): CaptureRecord | undefined {
-  return listCaptures().find((c) => c.id === id)
+  const fromDisk = listCaptures().find((c) => c.id === id)
+  if (fromDisk) return fromDisk
+  return loadManifest().items.find((c) => c.id === id)
 }
 
 export function updateCapture(id: string, patch: Partial<CaptureRecord>): CaptureRecord | undefined {
+  const destRoot = resolveDestination()
   const manifest = loadManifest()
-  const idx = manifest.items.findIndex((c) => c.id === id)
-  if (idx < 0) return undefined
-  manifest.items[idx] = { ...manifest.items[idx], ...patch, id }
+  let idx = manifest.items.findIndex((c) => c.id === id)
+  if (idx < 0) {
+    // Item may have come from folder scan — append then update
+    const fromList = listCaptures().find((c) => c.id === id)
+    if (!fromList) return undefined
+    manifest.items = [fromList, ...manifest.items]
+    idx = 0
+  }
+  manifest.items[idx] = {
+    ...normalizeRecord({ ...manifest.items[idx], ...patch, id }, destRoot)!,
+    ...patch,
+    id
+  }
   saveManifest(manifest)
   return manifest.items[idx]
 }
 
 export function deleteCapture(id: string): boolean {
-  const manifest = loadManifest()
-  const item = manifest.items.find((c) => c.id === id)
+  const item = getCapture(id)
   if (!item) return false
-  manifest.items = manifest.items.filter((c) => c.id !== id)
+  const manifest = loadManifest()
+  manifest.items = manifest.items.filter((c) => c.id !== id && c.path !== item.path)
   saveManifest(manifest)
   try {
     if (fs.existsSync(item.path)) fs.unlinkSync(item.path)
@@ -66,13 +201,7 @@ export function deleteCapture(id: string): boolean {
   return true
 }
 
-export function resolveDestination(): string {
-  const settings = getSettings()
-  if (settings.destinationFolder && fs.existsSync(settings.destinationFolder)) {
-    return settings.destinationFolder
-  }
-  return path.join(os.homedir(), 'Desktop')
-}
+export { resolveDestination }
 
 export function addCaptureFile(opts: {
   kind: CaptureKind

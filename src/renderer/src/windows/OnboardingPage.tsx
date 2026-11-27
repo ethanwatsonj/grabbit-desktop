@@ -22,18 +22,21 @@ export function OnboardingPage() {
   }, [])
 
   return (
-    <div className="app-surface" style={{ padding: 28, display: 'flex', flexDirection: 'column', gap: 16, height: '100%' }}>
+    <div className="app-surface onboarding-page">
       <div className="titlebar-drag" style={{ height: 16 }} />
-      <div style={{ fontSize: 22, fontWeight: 700 }}>Welcome to Grabbit</div>
-      <p className="muted" style={{ marginTop: 0 }}>
-        A few permissions so capture, hotkeys, and Auto Organize work like the native app.
+      <h1>Welcome to Grabbit</h1>
+      <p className="muted" style={{ margin: 0, fontSize: 14, fontWeight: 500 }}>
+        A few permissions so capture, hotkeys, and Auto Organize work.
       </p>
 
       {step === 'screen' && (
-        <section className="panel" style={{ padding: 16 }}>
-          <h3 style={{ marginTop: 0 }}>1. Screen Recording</h3>
-          <p className="muted">Needed for screenshots and recordings.</p>
-          <p>{screenOk ? 'Granted' : 'Not granted yet'}</p>
+        <section className="onboarding-step">
+          <h2 className="section-label">1. Screen Recording</h2>
+          <hr className="divider" />
+          <p className="muted" style={{ margin: 0 }}>
+            Needed for screenshots and recordings.
+          </p>
+          <p style={{ margin: 0, fontWeight: 500 }}>{screenOk ? 'Granted' : 'Not granted yet'}</p>
           <div style={{ display: 'flex', gap: 8 }}>
             <button className="btn" onClick={() => window.grabbit.permissionsOpenScreen()}>
               Open System Settings
@@ -46,10 +49,13 @@ export function OnboardingPage() {
       )}
 
       {step === 'accessibility' && (
-        <section className="panel" style={{ padding: 16 }}>
-          <h3 style={{ marginTop: 0 }}>2. Accessibility</h3>
-          <p className="muted">Needed for global keyboard shortcuts from any app.</p>
-          <p>{axOk ? 'Granted' : 'Not granted yet'}</p>
+        <section className="onboarding-step">
+          <h2 className="section-label">2. Accessibility</h2>
+          <hr className="divider" />
+          <p className="muted" style={{ margin: 0 }}>
+            Needed for global keyboard shortcuts from any app.
+          </p>
+          <p style={{ margin: 0, fontWeight: 500 }}>{axOk ? 'Granted' : 'Not granted yet'}</p>
           <div style={{ display: 'flex', gap: 8 }}>
             <button className="btn" onClick={() => window.grabbit.permissionsOpenAccessibility()}>
               Open System Settings
@@ -65,10 +71,13 @@ export function OnboardingPage() {
       )}
 
       {step === 'folder' && (
-        <section className="panel" style={{ padding: 16 }}>
-          <h3 style={{ marginTop: 0 }}>3. Save folder</h3>
-          <p className="muted">Where captures are written (change later in Settings).</p>
-          <p>{folder || 'Desktop (default until you choose)'}</p>
+        <section className="onboarding-step">
+          <h2 className="section-label">3. Save folder</h2>
+          <hr className="divider" />
+          <p className="muted" style={{ margin: 0 }}>
+            Where captures are written (change later in Settings).
+          </p>
+          <p style={{ margin: 0, fontWeight: 500 }}>{folder || 'Desktop (default until you choose)'}</p>
           <div style={{ display: 'flex', gap: 8 }}>
             <button
               className="btn"
@@ -95,7 +104,9 @@ export function OnboardingPage() {
         </section>
       )}
 
-      {step === 'done' && <p>You are set. Look for the rabbit in the menu bar.</p>}
+      {step === 'done' && (
+        <p style={{ fontWeight: 500, margin: 0 }}>You are set. Look for the rabbit in the menu bar.</p>
+      )}
     </div>
   )
 }

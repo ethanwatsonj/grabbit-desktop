@@ -1,4 +1,19 @@
-export type CaptureKind = 'screenshot' | 'recording'
+export type CaptureKind = 'screenshot' | 'recording' | 'audio'
+
+export type LibraryPrimaryView = 'all' | 'media' | 'audio'
+
+export interface LibraryFolderEntry {
+  name: string
+  relativePath: string
+  itemCount: number
+}
+
+export interface LibraryBrowseResult {
+  root: string
+  relativePath: string
+  folders: LibraryFolderEntry[]
+  files: CaptureRecord[]
+}
 
 export type CaptureMode = 'fullscreen' | 'region' | 'window'
 
@@ -62,6 +77,7 @@ export type RendererRoute =
   | 'region'
   | 'window-pick'
   | 'toast'
+  | 'kitchen-sink'
 
 export interface AnnotatePayload {
   captureId: string
@@ -74,4 +90,7 @@ export interface ToastPayload {
   thumbnailDataUrl?: string
   path: string
   kind: CaptureKind
+  /** Kitchen-sink / message-only toast copy */
+  message?: string
+  actionTitle?: string
 }

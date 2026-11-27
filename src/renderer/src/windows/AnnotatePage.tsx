@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import type { AnnotatePayload } from '../../../shared/types'
+import { ANNOTATION_PALETTE } from '../design/tokens'
 
 type Tool = 'select' | 'spotlight' | 'crop' | 'text' | 'sticker' | 'draw' | 'arrow' | 'rect'
 
@@ -12,7 +13,8 @@ interface Stroke {
   emoji?: string
 }
 
-const COLORS = ['#ff5c5c', '#ffd166', '#7dd3a0', '#6cb6ff', '#ffffff']
+/* DesignTokens.Color.annotationPalette solids */
+const COLORS = [...ANNOTATION_PALETTE]
 const STICKERS = ['🔥', '✅', '❌', '👀', '💡', '🎯', '📎', '🐰']
 
 export function AnnotatePage() {
@@ -164,59 +166,61 @@ export function AnnotatePage() {
     setStrokes([])
   }
 
+  const tools: { id: Tool; label: string; symbol: string }[] = [
+    { id: 'select', label: 'Select', symbol: '↖' },
+    { id: 'spotlight', label: 'Spotlight', symbol: '◎' },
+    { id: 'crop', label: 'Crop', symbol: '⬚' },
+    { id: 'text', label: 'Text', symbol: 'T' },
+    { id: 'sticker', label: 'Sticker', symbol: '☺' },
+    { id: 'draw', label: 'Draw', symbol: '✎' },
+    { id: 'arrow', label: 'Arrow', symbol: '→' },
+    { id: 'rect', label: 'Rectangle', symbol: '▭' }
+  ]
+
   return (
-    <div className="app-surface" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <header
-        className="titlebar-drag"
-        style={{ display: 'flex', gap: 8, padding: '16px 16px 12px', borderBottom: '1px solid var(--border)', flexWrap: 'wrap' }}
-      >
-        {(['select', 'spotlight', 'crop', 'text', 'sticker', 'draw', 'arrow', 'rect'] as Tool[]).map((t) => (
-          <button key={t} className={`btn titlebar-no-drag ${tool === t ? 'primary' : ''}`} onClick={() => setTool(t)}>
-            {t}
-          </button>
-        ))}
-        <div style={{ width: 8 }} />
-        {COLORS.map((c) => (
-          <button
-            key={c}
-            className="titlebar-no-drag"
-            onClick={() => setColor(c)}
+    <div className="app-surface annotate-page">
+      <div className="titlebar-drag annotate-page__drag" />
+
+      <div className="annotate-page__stage">
+        <div
+          className="annotate-page__canvas-wrap"
+          style={
+            bg === 'none'
+              ? undefined
+              : {
+                  background:
+                    bg === 'warm'
+                      ? 'linear-gradient(135deg, var(--grad-warm-from), var(--grad-warm-to))'
+                      : bg === 'cool'
+                        ? 'linear-gradient(135deg, var(--grad-cool-from), var(--grad-cool-to))'
+                        : 'linear-gradient(135deg, var(--grad-midnight-from), var(--grad-midnight-to))',
+                  padding: sideBySide ? 24 : 16
+                }
+          }
+        >
+          <canvas
+            ref={canvasRef}
+            onPointerDown={onPointerDown}
+            onPointerMove={onPointerMove}
+            onPointerUp={onPointerUp}
             style={{
-              width: 22,
-              height: 22,
-              borderRadius: 999,
-              border: color === c ? '2px solid white' : '1px solid var(--border)',
-              background: c
+              maxWidth: '100%',
+              maxHeight: '100%',
+              cursor: 'crosshair',
+              borderRadius: sideBySide ? 8 : 0,
+              boxShadow: sideBySide ? 'var(--elevation-raised)' : undefined
             }}
           />
-        ))}
-        <div style={{ flex: 1 }} />
-        <select className="field titlebar-no-drag" style={{ width: 120 }} value={bg} onChange={(e) => setBg(e.target.value as typeof bg)}>
-          <option value="none">No bg</option>
-          <option value="warm">Warm</option>
-          <option value="cool">Cool</option>
-          <option value="midnight">Midnight</option>
-        </select>
-        <button className={`btn titlebar-no-drag ${sideBySide ? 'primary' : ''}`} onClick={() => setSideBySide((v) => !v)}>
-          Side by side
-        </button>
-        <button className="btn titlebar-no-drag" onClick={cropToSelection}>
-          Apply crop
-        </button>
-        <button className="btn titlebar-no-drag" onClick={() => setStrokes((s) => s.slice(0, -1))}>
-          Undo
-        </button>
-        <button className="btn primary titlebar-no-drag" onClick={() => void exportPng()}>
-          Ship It
-        </button>
-      </header>
+        </div>
+      </div>
 
-      {tool === 'sticker' && (
-        <div style={{ padding: '8px 16px', display: 'flex', gap: 8 }}>
+      {tool === 'sticker' ? (
+        <div className="annotate-page__stickers titlebar-no-drag">
           {STICKERS.map((emoji) => (
             <button
               key={emoji}
-              className="btn"
+              type="button"
+              className="btn compact"
               onClick={() => {
                 setStrokes((s) => [
                   ...s,
@@ -228,16 +232,63 @@ export function AnnotatePage() {
             </button>
           ))}
         </div>
-      )}
+      ) : null}
 
-      <div style={{ flex: 1, overflow: 'auto', display: 'grid', placeItems: 'center', padding: 16 }}>
-        <canvas
-          ref={canvasRef}
-          onPointerDown={onPointerDown}
-          onPointerMove={onPointerMove}
-          onPointerUp={onPointerUp}
-          style={{ maxWidth: '100%', cursor: 'crosshair', borderRadius: 8 }}
-        />
+      <div className="annotate-page__chrome titlebar-no-drag">
+        <div className="ks-toolbar-pill annotate-toolbar">
+          {tools.map((t) => (
+            <button
+              key={t.id}
+              type="button"
+              className={tool === t.id ? 'is-active' : ''}
+              title={t.label}
+              onClick={() => setTool(t.id)}
+            >
+              {t.symbol}
+            </button>
+          ))}
+          <span className="ks-toolbar-pill__sep" />
+          {COLORS.map((c) => (
+            <button
+              key={c}
+              type="button"
+              className={`ks-color-btn ${color === c ? 'is-selected' : ''}`}
+              style={{ background: c, width: 20, height: 20, margin: 4 }}
+              onClick={() => setColor(c)}
+            />
+          ))}
+        </div>
+
+        <div className="annotate-page__actions">
+          <select
+            className="soft-control"
+            value={bg}
+            onChange={(e) => setBg(e.target.value as typeof bg)}
+          >
+            <option value="none">No background</option>
+            <option value="warm">Warm</option>
+            <option value="cool">Cool</option>
+            <option value="midnight">Midnight</option>
+          </select>
+          <button
+            type="button"
+            className={`btn compact ${sideBySide ? 'primary' : ''}`}
+            onClick={() => setSideBySide((v) => !v)}
+          >
+            Side by side
+          </button>
+          {tool === 'crop' ? (
+            <button type="button" className="btn compact" onClick={cropToSelection}>
+              Apply crop
+            </button>
+          ) : null}
+          <button type="button" className="btn compact" onClick={() => setStrokes((s) => s.slice(0, -1))}>
+            Undo
+          </button>
+          <button type="button" className="btn primary" onClick={() => void exportPng()}>
+            Ship It
+          </button>
+        </div>
       </div>
     </div>
   )
@@ -262,7 +313,7 @@ function drawStroke(ctx: CanvasRenderingContext2D, stroke: Stroke, _scale: numbe
 
   if (stroke.tool === 'text' && stroke.text) {
     ctx.fillStyle = stroke.color
-    ctx.font = '20px Avenir Next, sans-serif'
+    ctx.font = '20px Geist, sans-serif'
     ctx.fillText(stroke.text, pts[0].x, pts[0].y)
     return
   }

@@ -85,13 +85,14 @@ export function getRoutePayload(webContentsId: number): unknown {
 export function showLibrary(): BrowserWindow {
   const settings = getSettings()
   return createWindow('library', 'library', {
-    width: settings.libraryWidth || 1024,
-    height: settings.libraryHeight || 720,
-    minWidth: 720,
-    minHeight: 480,
+    width: settings.libraryWidth || 1100,
+    height: settings.libraryHeight || 740,
+    minWidth: 800,
+    minHeight: 520,
     titleBarStyle: 'hiddenInset',
-    trafficLightPosition: { x: 14, y: 14 },
-    backgroundColor: '#0f0f10'
+    // Sit traffic lights inside the primary rail
+    trafficLightPosition: { x: 20, y: 18 },
+    backgroundColor: '#0d0d0f'
   })
 }
 
@@ -101,7 +102,20 @@ export function showSettings(): BrowserWindow {
     height: 640,
     resizable: false,
     titleBarStyle: 'hiddenInset',
-    backgroundColor: '#121214'
+    backgroundColor: '#F5F5F5'
+  })
+}
+
+/** DEBUG design-system gallery — mirrors KitchenSinkWindow (780×640). */
+export function showKitchenSink(): BrowserWindow {
+  return createWindow('kitchen-sink', 'kitchen-sink', {
+    width: 780,
+    height: 640,
+    minWidth: 640,
+    minHeight: 480,
+    titleBarStyle: 'hiddenInset',
+    backgroundColor: '#F5F5F5',
+    alwaysOnTop: true
   })
 }
 
@@ -119,8 +133,9 @@ export function showOnboarding(): BrowserWindow {
 
 export function showCaptureBar(): BrowserWindow {
   const display = screen.getPrimaryDisplay()
-  const width = 420
-  const height = 72
+  const width = 520
+  /** Extra top space for dark hover labels (Swift ToastWindow above bar). */
+  const height = 108
   const x = Math.round(display.workArea.x + (display.workArea.width - width) / 2)
   const y = Math.round(display.workArea.y + 24)
   return createWindow(

@@ -20,6 +20,33 @@ export function ToastPage() {
 
   if (!payload) return null
 
+  if (payload.message && !payload.path) {
+    return (
+      <div
+        className="panel"
+        style={{
+          margin: 8,
+          width: 'calc(100% - 16px)',
+          height: 'calc(100% - 16px)',
+          padding: 12,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          gap: 8,
+          background: 'var(--panel-surface)',
+          boxShadow: 'var(--elevation-panel)'
+        }}
+      >
+        <div style={{ fontSize: 14, fontWeight: 500 }}>{payload.message}</div>
+        {payload.actionTitle ? (
+          <button type="button" className="btn compact" onClick={() => window.grabbit.toastDismiss()}>
+            {payload.actionTitle}
+          </button>
+        ) : null}
+      </div>
+    )
+  }
+
   return (
     <button
       className="panel"

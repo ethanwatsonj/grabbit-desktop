@@ -3,6 +3,7 @@ import { registerIpc } from './ipc'
 import { createTray, refreshTrayMenu } from './tray'
 import { ensureOnboarding, registerShortcuts } from './shortcuts'
 import { getSettings } from './storage/settings'
+import { showLibrary } from './windows/windowManager'
 
 // Menu-bar style: hide dock icon on macOS
 if (process.platform === 'darwin') {
@@ -18,11 +19,16 @@ app.whenReady().then(() => {
   const settings = getSettings()
   if (!settings.onboardingComplete) {
     ensureOnboarding()
+  } else {
+    // Open the file library so the primary rail is visible immediately
+    showLibrary()
   }
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
-      ensureOnboarding()
+      const s = getSettings()
+      if (!s.onboardingComplete) ensureOnboarding()
+      else showLibrary()
     }
   })
 })

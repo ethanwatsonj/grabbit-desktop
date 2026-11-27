@@ -54,8 +54,8 @@ export function RegionPage() {
             top: rect.y,
             width: rect.width,
             height: rect.height,
-            border: '2px solid #7dd3a0',
-            background: 'rgba(125,211,160,0.12)',
+            border: '2px solid rgba(161,161,161,0.55)',
+            background: 'rgba(161,161,161,0.08)',
             boxShadow: '0 0 0 9999px rgba(0,0,0,0.35)'
           }}
         />

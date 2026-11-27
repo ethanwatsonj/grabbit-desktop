@@ -6,6 +6,8 @@ const api = {
   settingsSet: (partial: unknown) => ipcRenderer.invoke(IPC.settingsSet, partial),
   settingsPickFolder: () => ipcRenderer.invoke(IPC.settingsPickFolder),
   historyList: () => ipcRenderer.invoke(IPC.historyList),
+  libraryBrowse: (relativePath: string, view: string) =>
+    ipcRenderer.invoke(IPC.libraryBrowse, relativePath, view),
   historyGet: (id: string) => ipcRenderer.invoke(IPC.historyGet, id),
   historyUpdate: (id: string, patch: unknown) => ipcRenderer.invoke(IPC.historyUpdate, id, patch),
   historyDelete: (id: string) => ipcRenderer.invoke(IPC.historyDelete, id),
@@ -24,6 +26,9 @@ const api = {
   annotateSave: (id: string, dataUrl: string) => ipcRenderer.invoke(IPC.annotateSave, id, dataUrl),
   libraryShow: () => ipcRenderer.invoke(IPC.libraryShow),
   settingsShow: () => ipcRenderer.invoke(IPC.settingsShow),
+  kitchenSinkShow: () => ipcRenderer.invoke(IPC.kitchenSinkShow),
+  kitchenSinkToast: (message: string, withAction?: boolean) =>
+    ipcRenderer.invoke(IPC.kitchenSinkToast, message, withAction),
   onboardingComplete: () => ipcRenderer.invoke(IPC.onboardingComplete),
   permissionsScreen: () => ipcRenderer.invoke(IPC.permissionsScreen),
   permissionsAccessibility: () => ipcRenderer.invoke(IPC.permissionsAccessibility),

@@ -31,9 +31,12 @@ export function thumbsDir(): string {
   return dir
 }
 
-export function formatCaptureFilename(kind: 'screenshot' | 'recording', date = new Date()): string {
+export function formatCaptureFilename(
+  kind: 'screenshot' | 'recording' | 'audio',
+  date = new Date()
+): string {
   const pad = (n: number) => String(n).padStart(2, '0')
   const stamp = `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}-${pad(date.getMinutes())}-${pad(date.getSeconds())}`
-  const ext = kind === 'screenshot' ? 'png' : 'webm'
+  const ext = kind === 'screenshot' ? 'png' : kind === 'audio' ? 'm4a' : 'webm'
   return `Grabbit ${stamp}.${ext}`
 }

@@ -8,6 +8,7 @@ import { CaptureBarPage } from './windows/CaptureBarPage'
 import { RegionPage } from './windows/RegionPage'
 import { WindowPickPage } from './windows/WindowPickPage'
 import { ToastPage } from './windows/ToastPage'
+import { KitchenSinkPage } from './windows/KitchenSinkPage'
 
 function currentRoute(): string {
   const hash = window.location.hash.replace(/^#\/?/, '')
@@ -40,6 +41,8 @@ export function App() {
       return <WindowPickPage />
     case 'toast':
       return <ToastPage />
+    case 'kitchen-sink':
+      return <KitchenSinkPage />
     case 'library':
     default:
       return <LibraryPage />
