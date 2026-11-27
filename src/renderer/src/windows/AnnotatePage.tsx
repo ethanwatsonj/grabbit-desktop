@@ -4,8 +4,9 @@ import { ANNOTATION_PALETTE } from '../design/tokens'
 
 /**
  * Screenshot annotate window — mirrors AnnotationWindow.swift (screenshotTools):
- * titlebar (title + Copy + Open in Grabbit), floating tool pill over the stage,
- * sticker grid, and the right-edge "More" (Ship It) overlay panel.
+ * titlebar (title + Copy + Open in Grabbit + Ship It), floating tool pill over the stage,
+ * sticker grid, and the right-edge Frame overlay (backgrounds / side-by-side).
+ * Ship It = bake + clipboard + close; Frame = presentation panel — not the same door.
  */
 
 /**
@@ -454,7 +455,7 @@ export function AnnotatePage() {
   const [sideOrder, setSideOrder] = useState<SideBySideOrder>('currentFirst')
   const [sideChoices, setSideChoices] = useState<SideChoice[] | null>(null)
   const [sideChoiceId, setSideChoiceId] = useState<string | null>(null)
-  const [morePanelOpen, setMorePanelOpen] = useState(false)
+  const [framePanelOpen, setFramePanelOpen] = useState(false)
 
   const [stageSize, setStageSize] = useState({ w: 0, h: 0 })
   const [toast, setToast] = useState<string | null>(null)
@@ -500,9 +501,9 @@ export function AnnotatePage() {
     }
   }, [doc.imageUrl])
 
-  /* Previous screenshots for side-by-side (loaded lazily when the More panel first opens). */
+  /* Previous screenshots for side-by-side (loaded lazily when the Frame panel first opens). */
   useEffect(() => {
-    if (!morePanelOpen || sideChoices !== null || !captureId) return
+    if (!framePanelOpen || sideChoices !== null || !captureId) return
     let cancelled = false
     ;(async () => {
       const list = ((await window.grabbit.historyList()) as CaptureRecord[]) ?? []
@@ -517,7 +518,7 @@ export function AnnotatePage() {
     return () => {
       cancelled = true
     }
-  }, [morePanelOpen, sideChoices, captureId])
+  }, [framePanelOpen, sideChoices, captureId])
 
   useEffect(() => {
     const choice = sideChoices?.find((c) => c.id === sideChoiceId)
@@ -680,7 +681,21 @@ export function AnnotatePage() {
     window.close()
   }
 
+  /** Primary CTA: bake annotations, copy to clipboard, close — export / done. */
+  const onShipIt = async () => {
+    const ok = await flattenSave()
+    if (!ok) {
+      showToast('Couldn’t ship')
+      return
+    }
+    window.close()
+  }
+
   const onEscape = async () => {
+    if (framePanelOpen) {
+      setFramePanelOpen(false)
+      return
+    }
     await flattenSave()
     window.close()
   }
@@ -1003,7 +1018,7 @@ export function AnnotatePage() {
     return () => window.removeEventListener('keydown', onKey)
   }, [])
 
-  /* ——— More panel helpers ——— */
+  /* ——— Frame panel helpers ——— */
   const toggleSideBySide = () => {
     if (sideEnabled) {
       setSideEnabled(false)
@@ -1076,15 +1091,16 @@ export function AnnotatePage() {
           </button>
           <button
             type="button"
-            className={`btn compact primary annotate-ship ${morePanelOpen ? 'is-open' : ''}`}
-            onClick={() => setMorePanelOpen((v) => !v)}
+            className="btn compact primary annotate-ship"
+            title="Bake, copy, and close"
+            onClick={() => void onShipIt()}
           >
             Ship It
           </button>
         </div>
       </div>
 
-      {/* Stage — toolbar pill, sticker panel and More panel float above it */}
+      {/* Stage — toolbar pill, sticker panel and Frame panel float above it */}
       <div className="annotate-stage-host">
         <div className="annotate-stage" ref={stageRef}>
           {layout ? (
@@ -1197,10 +1213,6 @@ export function AnnotatePage() {
                   onChange={(e) => changeDim(Number(e.target.value))}
                 />
               </label>
-              <label className="annotate-pill__option is-disabled" title="Blur — coming soon">
-                <span>Blur</span>
-                <input type="range" min={0} max={20} value={0} disabled readOnly />
-              </label>
             </>
           ) : null}
 
@@ -1247,23 +1259,25 @@ export function AnnotatePage() {
           </button>
           <button
             type="button"
-            className={`annotate-pill__btn ${morePanelOpen ? 'is-active' : ''}`}
-            title="More"
-            onClick={() => setMorePanelOpen((v) => !v)}
+            className={`annotate-pill__btn ${framePanelOpen ? 'is-active' : ''}`}
+            title="Frame"
+            aria-label="Frame"
+            aria-pressed={framePanelOpen}
+            onClick={() => setFramePanelOpen((v) => !v)}
           >
             ···
           </button>
         </div>
 
-        {morePanelOpen ? (
-          <aside className="annotate-more titlebar-no-drag" aria-label="More">
+        {framePanelOpen ? (
+          <aside className="annotate-more titlebar-no-drag" aria-label="Frame">
             <div className="annotate-more__header">
-              <span className="annotate-more__title">More</span>
+              <span className="annotate-more__title">Frame</span>
               <button
                 type="button"
                 className="annotate-icon-btn"
                 title="Close"
-                onClick={() => setMorePanelOpen(false)}
+                onClick={() => setFramePanelOpen(false)}
               >
                 ›
               </button>

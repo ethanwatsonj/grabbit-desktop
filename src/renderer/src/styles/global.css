@@ -2176,10 +2176,6 @@ button {
   width: 72px;
 }
 
-.annotate-pill__option.is-disabled {
-  opacity: 0.45;
-}
-
 /* Sticker panel — 6 columns, floats above the pill */
 .annotate-stickers {
   position: absolute;
@@ -2239,7 +2235,7 @@ button {
   pointer-events: none;
 }
 
-/* More / Ship It — right-edge overlay panel (252pt wide, lg inset) */
+/* Frame panel — backgrounds / side-by-side (252pt wide, lg inset). Distinct from Ship It CTA. */
 .annotate-more {
   position: absolute;
   top: var(--space-sm);
