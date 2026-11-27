@@ -2,7 +2,7 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Dev grabbit-swiftui",
+      "label": "Dev grabbit-desktop",
       "type": "shell",
       "command": "npm run dev",
       "group": {

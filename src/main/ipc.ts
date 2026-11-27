@@ -1,16 +1,22 @@
 import { app, BrowserWindow, clipboard, dialog, ipcMain, nativeImage, systemPreferences } from 'electron'
 import fs from 'fs'
 import { IPC } from '../shared/ipc'
-import type { AppSettings, CaptureRecord, OrganizeSuggestion } from '../shared/types'
+import type {
+  AppSettings,
+  CaptureLocationSnapshot,
+  CaptureRecord,
+  OrganizeSuggestion
+} from '../shared/types'
 import { getSettings, setSettings, setOrganizeProvider } from './storage/settings'
 import {
   deleteCapture,
   getCapture,
   listCaptures,
   moveCaptureToProject,
+  renameCaptureFile,
   updateCapture
 } from './storage/history'
-import { browseLibraryFolder } from './storage/libraryBrowser'
+import { browseLibraryFolder, listProjectFolders, stableId } from './storage/libraryBrowser'
 import type { LibraryPrimaryView } from '../shared/types'
 import { getGeminiApiKey, setGeminiApiKey } from './storage/secrets'
 import { takeScreenshot, listWindowsForPicker } from './capture/captureService'
@@ -26,7 +32,7 @@ import {
   openAccessibilityPrefs,
   openScreenRecordingPrefs
 } from './helper/nativeHelper'
-import { applyOrganize, suggestOrganize } from './organize/organizeService'
+import { applyOrganize, revertOrganize, suggestOrganize } from './organize/organizeService'
 import {
   closeWindowByKey,
   getRoutePayload,
@@ -63,14 +69,23 @@ export function registerIpc(): void {
   ipcMain.handle(IPC.libraryBrowse, (_e, relativePath: string, view: LibraryPrimaryView) =>
     browseLibraryFolder(relativePath || '', view || 'all')
   )
+  ipcMain.handle(IPC.libraryListProjects, () => listProjectFolders())
+  ipcMain.handle(IPC.historyRename, (_e, id: string, newBaseName: string) => {
+    const record = renameCaptureFile(id, newBaseName)
+    if (!record) return null
+    refreshTrayMenu()
+    return { ...record, id: stableId(record.path) }
+  })
   ipcMain.handle(IPC.historyGet, (_e, id: string) => {
     return getCapture(id) || listCaptures().find((c) => c.id === id)
   })
   ipcMain.handle(IPC.historyUpdate, (_e, id: string, patch: Partial<CaptureRecord>) => {
-    if (patch.projectTag !== undefined) {
-      return moveCaptureToProject(id, patch.projectTag || undefined)
-    }
-    return updateCapture(id, patch)
+    const record =
+      patch.projectTag !== undefined
+        ? moveCaptureToProject(id, patch.projectTag || undefined)
+        : updateCapture(id, patch)
+    // File ids are path hashes — hand back the id the library list will use next.
+    return record ? { ...record, id: stableId(record.path) } : record
   })
   ipcMain.handle(IPC.historyDelete, (_e, id: string) => {
     const ok = deleteCapture(id)
@@ -194,11 +209,19 @@ export function registerIpc(): void {
 
   ipcMain.handle(IPC.organizeSuggest, async (_e, captureId: string) => suggestOrganize(captureId))
   ipcMain.handle(IPC.organizeApply, (_e, suggestion: OrganizeSuggestion) => {
-    const ok = applyOrganize(suggestion)
+    const result = applyOrganize(suggestion)
     refreshTrayMenu()
-    return ok
+    return result
   })
   ipcMain.handle(IPC.organizeDismiss, () => true)
+  ipcMain.handle(
+    IPC.organizeRevert,
+    (_e, snapshot: CaptureLocationSnapshot & { captureId: string }) => {
+      const result = revertOrganize(snapshot)
+      refreshTrayMenu()
+      return result
+    }
+  )
 
   ipcMain.handle(IPC.toastOpenAnnotate, (_e, captureId: string) => {
     closeWindowByKey('toast')

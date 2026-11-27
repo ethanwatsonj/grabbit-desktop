@@ -1,4 +1,4 @@
-APP_NAME := grabbit-swiftui
+APP_NAME := grabbit-desktop
 HELPER := native/helper/.build/release/grabbit-helper
 
 .PHONY: install dev build helper dist clean typecheck run stop
@@ -25,9 +25,9 @@ run: build
 	npx electron .
 
 stop:
-	@pkill -f 'Electron.*grabbit-swiftui' 2>/dev/null || true
+	@pkill -f 'Electron.*grabbit-desktop' 2>/dev/null || true
 	@pkill -f 'electron-vite' 2>/dev/null || true
-	@osascript -e 'tell application id "ewew.design.grabbit-swiftui" to quit' >/dev/null 2>&1 || true
+	@osascript -e 'tell application id "ewew.design.grabbit-desktop" to quit' >/dev/null 2>&1 || true
 
 clean:
 	rm -rf out dist node_modules native/helper/.build

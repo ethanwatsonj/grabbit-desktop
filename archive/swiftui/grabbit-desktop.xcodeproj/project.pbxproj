@@ -7,27 +7,27 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		F9E23FEA2FF09D6E00FEF01D /* grabbit-swiftui.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = grabbit-swiftui.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F9E23FEA2FF09D6E00FEF01D /* grabbit-desktop.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = grabbit-desktop.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		F9E23FEC2FF09D6E00FEF01D /* grabbit-swiftui */ = {
+		F9E23FEC2FF09D6E00FEF01D /* grabbit-desktop */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				F9E23FED2FF09D6E00FEF01D /* Exceptions for "grabbit-swiftui" folder in "grabbit-swiftui" target */,
+				F9E23FED2FF09D6E00FEF01D /* Exceptions for "grabbit-desktop" folder in "grabbit-desktop" target */,
 			);
-			path = grabbit-swiftui;
+			path = grabbit-desktop;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		F9E23FED2FF09D6E00FEF01D /* Exceptions for "grabbit-swiftui" folder in "grabbit-swiftui" target */ = {
+		F9E23FED2FF09D6E00FEF01D /* Exceptions for "grabbit-desktop" folder in "grabbit-desktop" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = F9E23FE92FF09D6E00FEF01D /* grabbit-swiftui */;
+			target = F9E23FE92FF09D6E00FEF01D /* grabbit-desktop */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -46,14 +46,14 @@
 			isa = PBXGroup;
 			children = (
 				F9E23FEB2FF09D6E00FEF01D /* Products */,
-				F9E23FEC2FF09D6E00FEF01D /* grabbit-swiftui */,
+				F9E23FEC2FF09D6E00FEF01D /* grabbit-desktop */,
 			);
 			sourceTree = "<group>";
 		};
 		F9E23FEB2FF09D6E00FEF01D /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F9E23FEA2FF09D6E00FEF01D /* grabbit-swiftui.app */,
+				F9E23FEA2FF09D6E00FEF01D /* grabbit-desktop.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -61,9 +61,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		F9E23FE92FF09D6E00FEF01D /* grabbit-swiftui */ = {
+		F9E23FE92FF09D6E00FEF01D /* grabbit-desktop */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F9E23FF72FF09D7100FEF01D /* Build configuration list for PBXNativeTarget "grabbit-swiftui" */;
+			buildConfigurationList = F9E23FF72FF09D7100FEF01D /* Build configuration list for PBXNativeTarget "grabbit-desktop" */;
 			buildPhases = (
 				F9E23FE62FF09D6E00FEF01D /* Sources */,
 				F9E23FE72FF09D6E00FEF01D /* Frameworks */,
@@ -74,13 +74,13 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				F9E23FEC2FF09D6E00FEF01D /* grabbit-swiftui */,
+				F9E23FEC2FF09D6E00FEF01D /* grabbit-desktop */,
 			);
-			name = "grabbit-swiftui";
+			name = "grabbit-desktop";
 			packageProductDependencies = (
 			);
-			productName = "grabbit-swiftui";
-			productReference = F9E23FEA2FF09D6E00FEF01D /* grabbit-swiftui.app */;
+			productName = "grabbit-desktop";
+			productReference = F9E23FEA2FF09D6E00FEF01D /* grabbit-desktop.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -98,7 +98,7 @@
 					};
 				};
 			};
-			buildConfigurationList = F9E23FE52FF09D6E00FEF01D /* Build configuration list for PBXProject "grabbit-swiftui" */;
+			buildConfigurationList = F9E23FE52FF09D6E00FEF01D /* Build configuration list for PBXProject "grabbit-desktop" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -112,7 +112,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				F9E23FE92FF09D6E00FEF01D /* grabbit-swiftui */,
+				F9E23FE92FF09D6E00FEF01D /* grabbit-desktop */,
 			);
 		};
 /* End PBXProject section */
@@ -267,7 +267,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "grabbit-swiftui/grabbit-swiftui.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "grabbit-desktop/grabbit-desktop.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -277,7 +277,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "grabbit-swiftui/Info.plist";
+				INFOPLIST_FILE = "grabbit-desktop/Info.plist";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSAppleEventsUsageDescription = "Grabbit reads the active tab's URL from your browser so it can organize screenshots into the right project folder.";
@@ -290,9 +290,9 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26;
 				MARKETING_VERSION = 0.1;
-				PRODUCT_BUNDLE_IDENTIFIER = "ewew.design.grabbit-swiftui";
+				PRODUCT_BUNDLE_IDENTIFIER = "ewew.design.grabbit-desktop";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PRODUCT_MODULE_NAME = GrabbitSwiftUI;
+				PRODUCT_MODULE_NAME = GrabbitDesktop;
 				REGISTER_APP_GROUPS = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -308,7 +308,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "grabbit-swiftui/grabbit-swiftui.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "grabbit-desktop/grabbit-desktop.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -318,7 +318,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "grabbit-swiftui/Info.plist";
+				INFOPLIST_FILE = "grabbit-desktop/Info.plist";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSAppleEventsUsageDescription = "Grabbit reads the active tab's URL from your browser so it can organize screenshots into the right project folder.";
@@ -331,9 +331,9 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26;
 				MARKETING_VERSION = 0.1;
-				PRODUCT_BUNDLE_IDENTIFIER = "ewew.design.grabbit-swiftui";
+				PRODUCT_BUNDLE_IDENTIFIER = "ewew.design.grabbit-desktop";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PRODUCT_MODULE_NAME = GrabbitSwiftUI;
+				PRODUCT_MODULE_NAME = GrabbitDesktop;
 				REGISTER_APP_GROUPS = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -347,7 +347,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		F9E23FE52FF09D6E00FEF01D /* Build configuration list for PBXProject "grabbit-swiftui" */ = {
+		F9E23FE52FF09D6E00FEF01D /* Build configuration list for PBXProject "grabbit-desktop" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F9E23FF52FF09D7100FEF01D /* Debug */,
@@ -356,7 +356,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F9E23FF72FF09D7100FEF01D /* Build configuration list for PBXNativeTarget "grabbit-swiftui" */ = {
+		F9E23FF72FF09D7100FEF01D /* Build configuration list for PBXNativeTarget "grabbit-desktop" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F9E23FF82FF09D7100FEF01D /* Debug */,

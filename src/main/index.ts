@@ -5,12 +5,12 @@ import { ensureOnboarding, registerShortcuts } from './shortcuts'
 import { getSettings } from './storage/settings'
 import { showLibrary } from './windows/windowManager'
 
-// Menu-bar style: hide dock icon on macOS
-if (process.platform === 'darwin') {
-  app.dock?.hide()
-}
-
 app.whenReady().then(() => {
+  // Menu-bar accessory by default; Show All flips to Dock via presentLibraryInDock()
+  if (process.platform === 'darwin') {
+    app.dock?.hide()
+  }
+
   registerIpc()
   createTray()
   registerShortcuts()
@@ -21,6 +21,7 @@ app.whenReady().then(() => {
     ensureOnboarding()
   } else {
     // Open the file library so the primary rail is visible immediately
+    // (also shows Dock icon while library is open — Swift AppDockPresentation)
     showLibrary()
   }
 

@@ -1,4 +1,5 @@
 import { Menu, Tray, nativeImage, app, BrowserWindow } from 'electron'
+import fs from 'fs'
 import path from 'path'
 import { listCaptures } from './storage/history'
 import { takeScreenshot } from './capture/captureService'
@@ -21,20 +22,45 @@ import { getSettings } from './storage/settings'
 let tray: Tray | null = null
 let timer: NodeJS.Timeout | null = null
 
-function trayIcon(): Electron.NativeImage {
-  const svgPath = path.join(app.getAppPath(), 'resources', 'trayTemplate.svg')
-  // Fallback: empty template; electron-vite may pack resources differently
-  try {
-    const img = nativeImage.createFromPath(svgPath)
-    if (!img.isEmpty()) {
-      img.setTemplateImage(true)
-      return img
+/** Resolve tray rabbit PNG (Swift MenuBarIcon) across dev + packaged layouts. */
+function trayIconCandidates(): string[] {
+  const roots = [
+    path.join(__dirname, '../../resources'),
+    path.join(__dirname, '../resources'),
+    path.join(app.getAppPath(), 'resources'),
+    path.join(process.resourcesPath || '', 'resources'),
+    path.join(process.cwd(), 'resources')
+  ]
+  const names = ['trayTemplate.png', 'MenuBarIcon.png', 'trayTemplate.svg']
+  const out: string[] = []
+  for (const root of roots) {
+    for (const name of names) {
+      out.push(path.join(root, name))
     }
-  } catch {
-    /* fall through */
   }
-  const fallback = nativeImage.createEmpty()
-  // 16x16 black rabbit-ish template via data URL PNG is heavy; use empty + title
+  return out
+}
+
+function trayIcon(): Electron.NativeImage {
+  for (const candidate of trayIconCandidates()) {
+    try {
+      if (!fs.existsSync(candidate)) continue
+      if (candidate.endsWith('.svg')) continue // Electron tray SVG often yields empty
+      const img = nativeImage.createFromPath(candidate)
+      if (img.isEmpty()) continue
+      // Menu bar template: black glyph → system tints for light/dark
+      const sized = img.resize({ width: 22, height: 11, quality: 'best' })
+      sized.setTemplateImage(true)
+      return sized
+    } catch {
+      /* try next */
+    }
+  }
+  // Last resort: 16×16 filled template so the item still appears
+  const fallback = nativeImage.createFromDataURL(
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAAFUlEQVR42mNk+M9Qz0AEYBxVSF+FABJADveWkH6aAAAAAElFTkSuQmCC'
+  )
+  fallback.setTemplateImage(true)
   return fallback
 }
 
@@ -116,7 +142,7 @@ function rebuildMenu(): void {
       click: () => showSettings()
     },
     { type: 'separator' },
-    { label: 'Quit grabbit-swiftui', click: () => app.quit() }
+    { label: 'Quit Grabbit', click: () => app.quit() }
   ])
 
   tray.setContextMenu(menu)
@@ -124,7 +150,7 @@ function rebuildMenu(): void {
 
 export function createTray(): Tray {
   tray = new Tray(trayIcon())
-  tray.setToolTip('grabbit-swiftui')
+  tray.setToolTip('Grabbit')
   tray.on('click', () => {
     if (getRecordingState().active) {
       for (const win of BrowserWindow.getAllWindows()) {

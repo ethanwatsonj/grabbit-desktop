@@ -1,4 +1,4 @@
-# grabbit-swiftui
+# grabbit-desktop
 
 A free, native macOS capture tool — screenshots, screen recording, FigJam-style annotations, and a Capture Library with Auto Organize.
 
@@ -10,7 +10,7 @@ A free, native macOS capture tool — screenshots, screen recording, FigJam-styl
 make run
 ```
 
-Or open `grabbit-swiftui.xcodeproj` in Xcode and run the **grabbit-swiftui** scheme.
+Or open `grabbit-desktop.xcodeproj` in Xcode and run the **grabbit-desktop** scheme.
 
 The app is menu-bar only (`LSUIElement`) — look for the rabbit icon in the status bar.
 
@@ -44,8 +44,8 @@ Release builds for sharing need a **Developer ID Application** certificate. Loca
 
 ```bash
 # After archiving / exporting a Developer ID–signed .app:
-xcrun notarytool submit grabbit-swiftui.zip --keychain-profile "AC_PASSWORD" --wait
-xcrun stapler staple grabbit-swiftui.app
+xcrun notarytool submit grabbit-desktop.zip --keychain-profile "AC_PASSWORD" --wait
+xcrun stapler staple grabbit-desktop.app
 ```
 
 ### 2. Build the installer DMG
@@ -53,18 +53,18 @@ xcrun stapler staple grabbit-swiftui.app
 Requires [create-dmg](https://github.com/create-dmg/create-dmg) (`brew install create-dmg`).
 
 ```bash
-make dmg RELEASE_APP=/path/to/stapled/grabbit-swiftui.app
-# defaults to ./grabbit-swiftui.app if present
+make dmg RELEASE_APP=/path/to/stapled/grabbit-desktop.app
+# defaults to ./grabbit-desktop.app if present
 ```
 
-This writes `dist/grabbit-swiftui.dmg` with a drag-to-Applications window. It does **not** notarize.
+This writes `dist/grabbit-desktop.dmg` with a drag-to-Applications window. It does **not** notarize.
 
 ### 3. Notarize and staple the DMG
 
 ```bash
-xcrun notarytool submit dist/grabbit-swiftui.dmg --keychain-profile "AC_PASSWORD" --wait
-xcrun stapler staple dist/grabbit-swiftui.dmg
-spctl --assess --type open --context context:primary-signature -v dist/grabbit-swiftui.dmg
+xcrun notarytool submit dist/grabbit-desktop.dmg --keychain-profile "AC_PASSWORD" --wait
+xcrun stapler staple dist/grabbit-desktop.dmg
+spctl --assess --type open --context context:primary-signature -v dist/grabbit-desktop.dmg
 ```
 
 ### 4. Publish a GitHub Release
@@ -75,10 +75,10 @@ Repo must be **public** (or release assets won’t download anonymously). Instal
 make release TAG=v0.1.0
 ```
 
-Keep the asset name **`grabbit-swiftui.dmg`** every release. Stable download URL for your site:
+Keep the asset name **`grabbit-desktop.dmg`** every release. Stable download URL for your site:
 
 ```text
-https://github.com/ethanwatsonj/grabbit-swiftui/releases/latest/download/grabbit-swiftui.dmg
+https://github.com/ethanwatsonj/grabbit-desktop/releases/latest/download/grabbit-desktop.dmg
 ```
 
 Friends can still run a Development-signed build from Xcode / `make run` on this Mac.

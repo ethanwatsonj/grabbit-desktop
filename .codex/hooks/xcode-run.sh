@@ -27,7 +27,7 @@ cd "$repo_root" || exit 0
 
 log_file=".cursor/.last-build-run.log"
 {
-  echo "=== grabbit-swiftui electron build & run $(date) ==="
+  echo "=== grabbit-desktop electron build & run $(date) ==="
   npm run dev
 } >"$log_file" 2>&1 &
 

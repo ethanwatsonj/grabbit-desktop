@@ -1,11 +1,11 @@
 {
-  "name": "grabbit-swiftui",
+  "name": "grabbit-desktop",
   "version": "0.1.0",
   "description": "Native-feel macOS capture tool — screenshots, recording, annotations, Capture Library, Auto Organize (Electron)",
   "main": "./out/main/index.js",
   "author": "Ethan Watson",
   "license": "UNLICENSED",
-  "homepage": "https://github.com/ethanwatsonj/grabbit-swiftui",
+  "homepage": "https://github.com/ethanwatsonj/grabbit-desktop",
   "scripts": {
     "dev": "electron-vite dev",
     "build": "electron-vite build",
@@ -34,8 +34,8 @@
     "vite": "^6.2.0"
   },
   "build": {
-    "appId": "ewew.design.grabbit-swiftui",
-    "productName": "grabbit-swiftui",
+    "appId": "ewew.design.grabbit-desktop",
+    "productName": "grabbit-desktop",
     "directories": {
       "output": "dist"
     },
@@ -70,7 +70,7 @@
       }
     },
     "dmg": {
-      "artifactName": "grabbit-swiftui.${ext}"
+      "artifactName": "grabbit-desktop.${ext}"
     }
   },
   "allowScripts": {

@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "F9E23FE92FF09D6E00FEF01D"
-               BuildableName = "grabbit-swiftui.app"
-               BlueprintName = "grabbit-swiftui"
-               ReferencedContainer = "container:grabbit-swiftui.xcodeproj">
+               BuildableName = "grabbit-desktop.app"
+               BlueprintName = "grabbit-desktop"
+               ReferencedContainer = "container:grabbit-desktop.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -44,9 +44,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F9E23FE92FF09D6E00FEF01D"
-            BuildableName = "grabbit-swiftui.app"
-            BlueprintName = "grabbit-swiftui"
-            ReferencedContainer = "container:grabbit-swiftui.xcodeproj">
+            BuildableName = "grabbit-desktop.app"
+            BlueprintName = "grabbit-desktop"
+            ReferencedContainer = "container:grabbit-desktop.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -61,9 +61,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F9E23FE92FF09D6E00FEF01D"
-            BuildableName = "grabbit-swiftui.app"
-            BlueprintName = "grabbit-swiftui"
-            ReferencedContainer = "container:grabbit-swiftui.xcodeproj">
+            BuildableName = "grabbit-desktop.app"
+            BlueprintName = "grabbit-desktop"
+            ReferencedContainer = "container:grabbit-desktop.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

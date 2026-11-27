@@ -21,7 +21,7 @@ export interface LibraryBrowseResult {
   files: CaptureRecord[]
 }
 
-function stableId(filePath: string): string {
+export function stableId(filePath: string): string {
   return crypto.createHash('sha1').update(filePath).digest('hex').slice(0, 32)
 }
 
@@ -186,4 +186,19 @@ export function listFilesInDestination(view: LibraryPrimaryView = 'all'): Captur
   if (fs.existsSync(root)) walk(root, 0)
   out.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
   return out
+}
+
+/** Immediate child directories of the destination root (project folders). */
+export function listProjectFolders(): string[] {
+  const root = resolveDestination()
+  let entries: fs.Dirent[]
+  try {
+    entries = fs.readdirSync(root, { withFileTypes: true })
+  } catch {
+    return []
+  }
+  return entries
+    .filter((e) => e.isDirectory() && !e.name.startsWith('.'))
+    .map((e) => e.name)
+    .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }))
 }

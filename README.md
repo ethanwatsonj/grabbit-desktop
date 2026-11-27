@@ -1,4 +1,4 @@
-# grabbit-swiftui (Electron)
+# grabbit-desktop (Electron)
 
 A free, native-feel macOS capture tool — screenshots, screen recording, annotations, Capture Library, and Auto Organize.
 
@@ -76,7 +76,7 @@ History continues to use `~/Library/Application Support/Grabbit/` so existing ma
 make dist
 ```
 
-Produces `dist/grabbit-swiftui.dmg` via electron-builder (`appId`: `ewew.design.grabbit-swiftui`).
+Produces `dist/grabbit-desktop.dmg` via electron-builder (`appId`: `ewew.design.grabbit-desktop`).
 
 Notarize with your Developer ID flow after export.
 

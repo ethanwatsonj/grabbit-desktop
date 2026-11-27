@@ -43,6 +43,10 @@ export interface HistoryManifest {
   items: CaptureRecord[]
 }
 
+export type LibraryGroupBy = 'none' | 'project'
+export type LibraryMediaKind = 'image' | 'video'
+export type MultiSelectLayout = 'cards' | 'list'
+
 export interface AppSettings {
   destinationFolder: string | null
   onboardingComplete: boolean
@@ -52,14 +56,34 @@ export interface AppSettings {
   libraryHeight: number
   recordingBackground: 'none' | 'warm' | 'cool' | 'midnight' | 'custom'
   micEnabledDefault: boolean
+  libraryGroupBy: LibraryGroupBy
+  /** Empty = show all media kinds (image + video). */
+  libraryMediaFilter: LibraryMediaKind[]
+  libraryMultiSelectLayout: MultiSelectLayout
+  librarySidebarWidth: number
 }
 
 export interface OrganizeSuggestion {
   captureId: string
-  suggestedName: string
-  suggestedProject?: string
+  suggestedName?: string | null
+  suggestedProject?: string | null
+  confidence: number
   rationale?: string
   provider: OrganizeProvider | 'heuristic'
+}
+
+/** Result of applying / reverting an organize action. File ids are path hashes, so `captureId` is the id after the move/rename. */
+export interface OrganizeApplyResult {
+  captureId: string
+  path: string
+  name: string
+  projectTag?: string
+}
+
+export interface CaptureLocationSnapshot {
+  name: string
+  directoryPath: string
+  projectTag?: string
 }
 
 export interface CaptureResult {

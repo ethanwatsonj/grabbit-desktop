@@ -51,6 +51,6 @@ Reference: `archive/swiftui/` · branch `archive/swiftui` · tag `swiftui-archiv
 
 ## Hotkeys & packaging
 - [x] ⌘⇧3 / ⌘⇧4 / ⌘⇧5 / ⌘7 / ⌘,
-- [x] electron-builder mac DMG (`grabbit-swiftui.dmg`)
+- [x] electron-builder mac DMG (`grabbit-desktop.dmg`)
 - [x] Entitlements + usage description strings
 - [ ] Notarization automation in CI

@@ -13,7 +13,11 @@ const store = new Store<AppSettings>({
     libraryWidth: 1024,
     libraryHeight: 720,
     recordingBackground: 'none',
-    micEnabledDefault: false
+    micEnabledDefault: false,
+    libraryGroupBy: 'none',
+    libraryMediaFilter: [],
+    libraryMultiSelectLayout: 'cards',
+    librarySidebarWidth: 240
   }
 })
 
@@ -36,7 +40,11 @@ export function getSettings(): AppSettings {
     libraryWidth: store.get('libraryWidth'),
     libraryHeight: store.get('libraryHeight'),
     recordingBackground: store.get('recordingBackground'),
-    micEnabledDefault: store.get('micEnabledDefault')
+    micEnabledDefault: store.get('micEnabledDefault'),
+    libraryGroupBy: store.get('libraryGroupBy') ?? 'none',
+    libraryMediaFilter: store.get('libraryMediaFilter') ?? [],
+    libraryMultiSelectLayout: store.get('libraryMultiSelectLayout') ?? 'cards',
+    librarySidebarWidth: store.get('librarySidebarWidth') ?? 240
   }
 }
 

@@ -27,7 +27,7 @@ enum OrganizeAIProvider: String, CaseIterable, Identifiable {
 enum AIConnection {
     static let didChangeNotification = Notification.Name("AIConnectionDidChange")
 
-    private static let keychainService = "ewew.design.grabbit-swiftui.ai"
+    private static let keychainService = "ewew.design.grabbit-desktop.ai"
     /// Pre-rename Keychain service; migrated on first read after the rename.
     private static let legacyKeychainService = "ewew.design.Grabbit.ai"
     private static let geminiAccount = "geminiAPIKey"

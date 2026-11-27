@@ -8,6 +8,9 @@ const api = {
   historyList: () => ipcRenderer.invoke(IPC.historyList),
   libraryBrowse: (relativePath: string, view: string) =>
     ipcRenderer.invoke(IPC.libraryBrowse, relativePath, view),
+  libraryListProjects: () => ipcRenderer.invoke(IPC.libraryListProjects),
+  historyRename: (id: string, newBaseName: string) =>
+    ipcRenderer.invoke(IPC.historyRename, id, newBaseName),
   historyGet: (id: string) => ipcRenderer.invoke(IPC.historyGet, id),
   historyUpdate: (id: string, patch: unknown) => ipcRenderer.invoke(IPC.historyUpdate, id, patch),
   historyDelete: (id: string) => ipcRenderer.invoke(IPC.historyDelete, id),
@@ -41,6 +44,7 @@ const api = {
   organizeSuggest: (id: string) => ipcRenderer.invoke(IPC.organizeSuggest, id),
   organizeApply: (suggestion: unknown) => ipcRenderer.invoke(IPC.organizeApply, suggestion),
   organizeDismiss: () => ipcRenderer.invoke(IPC.organizeDismiss),
+  organizeRevert: (snapshot: unknown) => ipcRenderer.invoke(IPC.organizeRevert, snapshot),
   toastOpenAnnotate: (id: string) => ipcRenderer.invoke(IPC.toastOpenAnnotate, id),
   toastDismiss: () => ipcRenderer.invoke(IPC.toastDismiss),
   regionSelected: (region: unknown) => ipcRenderer.send(IPC.regionSelected, region),

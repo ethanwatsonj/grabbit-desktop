@@ -13,7 +13,7 @@ xcuserdata/
 *.xcuserstate
 .build/
 native/helper/.build/
-grabbit-swiftui.app/
+grabbit-desktop.app/
 Grabbit.app/
 *.dmg
 tools/
