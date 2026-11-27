@@ -18,7 +18,7 @@ export function AutoOrganizeButton({
   return (
     <button
       type="button"
-      className={`btn ao-btn ${className}`.trim()}
+      className={`btn ao-btn titlebar-no-drag ${className}`.trim()}
       disabled={disabled && !isLoading}
       onClick={onClick}
       title={isLoading ? 'Auto-organizing…' : 'Auto Organize'}

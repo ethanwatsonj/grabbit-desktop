@@ -2791,7 +2791,18 @@ button {
   position: relative;
 }
 
-/* Empty title chrome owns window dragging; controls opt out via .titlebar-no-drag */
+/*
+ * Library window drag — background only (designer UX P0 #4).
+ *
+ * The absolute .library-drag strip alone is not enough: sidebar/detail sit above
+ * it (higher z-index) and swallow hits, so empty chrome never moved the window
+ * and soft controls had to fight accidental drag from incomplete no-drag marks.
+ *
+ * Title-band chrome containers are the drag surface. Soft controls opt out via
+ * .titlebar-no-drag wrappers and baked no-drag on SoftDropdown / TagKind /
+ * SuggestedName / AO / resize (Electron equivalent of AppKit
+ * mouseDownCanMoveWindow = false + .libraryTitlebarInteractive()).
+ */
 .library-drag {
   position: absolute;
   top: 0;
@@ -2799,6 +2810,24 @@ button {
   right: 0;
   height: 49px;
   z-index: 0;
+}
+
+.library-sidebar__chrome,
+.library-preview__header,
+.library-bulk__header,
+.library-empty {
+  -webkit-app-region: drag;
+}
+
+.soft-dropdown,
+.soft-dropdown__panel,
+.tag-dd,
+.suggest-name,
+.ao-btn,
+.library-name-cell,
+.library-bulk__seg,
+.library-suggest-row__buttons {
+  -webkit-app-region: no-drag;
 }
 
 .library-sidebar {
