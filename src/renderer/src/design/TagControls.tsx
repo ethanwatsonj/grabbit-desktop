@@ -126,6 +126,7 @@ export function TagKindDropdown({
       ref={rootRef}
       className={[
         'tag-dd',
+        'titlebar-no-drag',
         active ? 'is-active' : '',
         focused ? 'is-focused' : '',
         blocksEditing ? 'is-blocked' : '',
@@ -265,7 +266,9 @@ export function SuggestedNameField({
   }
 
   return (
-    <div className={`suggest-name ${focused ? 'is-focused' : ''} ${fillsAvailableWidth ? 'is-fill' : ''}`}>
+    <div
+      className={`suggest-name titlebar-no-drag ${focused ? 'is-focused' : ''} ${fillsAvailableWidth ? 'is-fill' : ''}`}
+    >
       <input
         className="suggest-name__input"
         style={

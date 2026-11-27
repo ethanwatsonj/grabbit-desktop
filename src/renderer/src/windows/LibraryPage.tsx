@@ -1622,7 +1622,9 @@ function PreviewPane({
             {showsNameEditor(row) && effectiveName(row) ? (
               <>
                 <span className="library-slash">/</span>
-                <SuggestedNameField name={effectiveName(row) as string} onCommit={onSelectName} />
+                <div className="titlebar-no-drag">
+                  <SuggestedNameField name={effectiveName(row) as string} onCommit={onSelectName} />
+                </div>
               </>
             ) : !showsProjectPicker(row) ? (
               <span className="library-suggest-row__empty">No rename suggested</span>

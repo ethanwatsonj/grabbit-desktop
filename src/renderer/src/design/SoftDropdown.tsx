@@ -56,7 +56,11 @@ export function SoftDropdownPanel({
   className?: string
 }) {
   return (
-    <div className={`soft-dropdown__panel ${className}`.trim()} style={style} role="menu">
+    <div
+      className={`soft-dropdown__panel titlebar-no-drag ${className}`.trim()}
+      style={style}
+      role="menu"
+    >
       {children}
     </div>
   )
@@ -116,7 +120,7 @@ export function SoftDropdown({
   const close = () => setOpen(false)
 
   return (
-    <div className={`soft-dropdown ${className}`.trim()} ref={rootRef}>
+    <div className={`soft-dropdown titlebar-no-drag ${className}`.trim()} ref={rootRef}>
       <button
         type="button"
         className={
